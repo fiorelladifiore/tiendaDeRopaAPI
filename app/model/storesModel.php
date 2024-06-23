@@ -7,7 +7,7 @@ class storesModel extends model{
     function getAll(){
         $db = $this->getConnection();
 
-        $sentence = $db->prepare("SELECT * FROM tienda");
+        $sentence = $db->prepare("SELECT * FROM tienda ORDER BY nombre ASC");
         $sentence->execute();
         $stores = $sentence->fetchAll(PDO::FETCH_OBJ);
         return $stores;
