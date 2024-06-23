@@ -17,29 +17,32 @@ A continuación se detallan cada una de sus funciones.
 ## Función `showingStores()`
 
 ### Descripción
-La función `showingStores` del controlador obtiene todas las tiendas de la base de datos y envía una respuesta adecuada al cliente basado en el resultado.
+La función `showingStores` del controlador obtiene todas las tiendas de la base de datos y envía una respuesta adecuada al cliente basado en el resultado. Además, se encarga de enviar parámetros de ordenación en caso de que los haya.
 
 ### CÓDIGO ESCRITO A MANO (COPY - PASTE DEL CONTROLADOR)
 
 ```php
  public function showingStores() {
         try {
-            // Obtener todas las tiendas del modelo
-            $stores = $this->model->getAll();
+            //se asigna un orden predeterminado en caso de que no haya parámetros.
+            $orderBy = isset($_GET['orderBy']) ? $_GET['orderBy'] : 'nombre';
+            $orderDir = isset($_GET['orderDir']) ? strtoupper($_GET['orderDir']) : 'ASC';
+            //Verifica que si no se inserta una dirección válida, use una predeterminada.
+            if ($orderDir != 'ASC' && $orderDir != 'DESC') {
+                $orderDir = 'ASC';
+            }
+            $stores = $this->model->getAll($orderBy, $orderDir);
             if($stores){
-                 // Si hay tiendas, las devuelve con un código 200 (éxito)
                 $response = [
                 "status" => 200,
                 "data" => $stores
                ];
                 $this->view->response($response, 200);
-            }    
-            else
-                // Si no hay tiendas, devuelve un mensaje con un código 404 (no encontrado)
-                 $this->view->response("No hay tiendas en la base de datos", 404);
+            }else{
+                $this->view->response("No existen tiendas en la base de datos", 404);
+            }
         } catch (Exception $e) {
-            // En caso de error del servidor, devolver un mensaje con un código 500 (error del servidor)
-            $this->view->response("Error de servidor", 500);
+                $this->view->response("Error de servidor", 500);
         }
     }
 ```

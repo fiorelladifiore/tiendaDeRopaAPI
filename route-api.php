@@ -6,6 +6,7 @@
     $router = new Router();
 
     // GET http://localhost/proyecto/tiendaDeRopaAPI/api/stores
+    //api/stores?orderBy=telefono&orderDir=ASC
     $router->addRoute('stores', 'GET', 'storesApiController', 'showingStores');
     $router->addRoute('stores/:ID', 'GET', 'storesApiController', 'showingStore');
     $router->addRoute('stores', 'POST', 'storesApiController', 'newStore');

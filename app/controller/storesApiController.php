@@ -20,7 +20,12 @@ class storesApiController {
 
     public function showingStores() {
         try {
-            $stores = $this->model->getAll();
+            $orderBy = isset($_GET['orderBy']) ? $_GET['orderBy'] : 'nombre';
+            $orderDir = isset($_GET['orderDir']) ? strtoupper($_GET['orderDir']) : 'ASC';
+            if ($orderDir != 'ASC' && $orderDir != 'DESC') {
+                $orderDir = 'ASC';
+            }
+            $stores = $this->model->getAll($orderBy, $orderDir);
             if($stores){
                 $response = [
                 "status" => 200,

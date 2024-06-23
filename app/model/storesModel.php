@@ -4,10 +4,10 @@ require_once "app/model/model.php";
 
 class storesModel extends model{
 
-    function getAll(){
+    function getAll($orderBy, $orderDir){
         $db = $this->getConnection();
 
-        $sentence = $db->prepare("SELECT * FROM tienda ORDER BY nombre ASC");
+        $sentence = $db->prepare("SELECT * FROM tienda ORDER BY $orderBy $orderDir");
         $sentence->execute();
         $stores = $sentence->fetchAll(PDO::FETCH_OBJ);
         return $stores;
