@@ -69,20 +69,21 @@ class storesApiController {
     public function newStore() {
         try {
         $store = $newStore = $this->getData();
-        if($store){
-        $lastId = $this->model->insertStore(
-                $store->nombre, 
-                $store->direccion,
-                $store->telefono,
-                $store->email);
-        $this->view->response("agregado exitoso con id: $lastId", 200);  
-        }else{
-         $this->view->response("No existen tiendas en la base de datos", 404);
+        $nombre=$store->nombre;
+        $direccion=$store->direccion;
+        $telefono=$store->telefono;
+        $email=$store->email;
+        if (empty($nombre) || empty($direccion) || empty($telefono) || empty($email)) {
+                $this->view->response("Complete los datos", 400);
+            }else{
+                $lastId=$this->model->insertStore($nombre, $direccion, $telefono, $email);
+                $store=$this->model->getStore($lastId);
+                $this->view->response($store, 201);  
             }
         }catch(Exception $e) {
-        $this->view->response("Error de servidor", 500);
-            }
+            $this->view->response("Error de servidor", 500);
         }
+    }
 
     public function deleteStore($params = null) {
         try{
@@ -111,7 +112,7 @@ class storesApiController {
             $telefono = $store->telefono;
             $email = $store->email;
             $this->model->updateStore($nombre, $direccion, $telefono, $email, $id);   
-            $this->view->response("Tienda $nombre, finalizada", 200);
+            $this->view->response("Tienda $nombre, modificada", 200);
         } else {
             $this->view->response("Tienda $id, no encontrada", 404);
             }

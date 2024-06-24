@@ -54,7 +54,7 @@ La función no retorna ningún valor directamente. En su lugar, envía una respu
 - **404 Not Found:** Si no hay tiendas en la base de datos.
 - **500 Internal Server Error:** Si ocurre un error del servidor al intentar obtener las tiendas.
 
-## Ejemplos de uso `http://localhost/proyecto/tiendaDeRopaAPI/api/stores`
+## Ejemplos de uso `GET http://localhost/proyecto/tiendaDeRopaAPI/api/stores`
 ### Ejemplo 1: Cómo obtener todas las tiendas
 
 Si hay tiendas en la base de datos, la función enviará una respuesta con código 200 y las tiendas en formato JSON:
@@ -147,7 +147,7 @@ La función no retorna ningún valor directamente. En su lugar, envía una respu
 - **404 Not Found:** Si no existe tienda solicitada en la base de datos.
 - **500 Internal Server Error:** Si ocurre un error del servidor al intentar obtener la tienda.
 
-## Ejemplos de uso `http://localhost/proyecto/tiendaDeRopaAPI/api/stores/3`
+## Ejemplos de uso `GET http://localhost/proyecto/tiendaDeRopaAPI/api/stores/3`
 ### Ejemplo 1: Cómo obtener una tienda
 
 Si existe la tienda solicitada en la base de datos, la función enviará una respuesta con código 200 y la tienda en formato JSON:
@@ -208,51 +208,58 @@ La función `newStore` del controlador agrega una nueva tienda y envía una resp
 ### CÓDIGO ESCRITO A MANO (COPY - PASTE DEL CONTROLADOR)
 
 ```php
-public function newStore() {
+ public function newStore() {
         try {
         $store = $newStore = $this->getData();
-        if($store){
-        $lastId = $this->model->insertStore(
-                $store->nombre, 
-                $store->direccion,
-                $store->telefono,
-                $store->email);
-        $this->view->response("Se insertó correctamente con id: $lastId", 200);
-            }    
-        else
-        // Si no hay tiendas, devuelve un mensaje con un código 404 (no encontrado)
-         $this->view->response("No se pudo insertar correctamente la tienda", 404);
-        } catch (Exception $e) {
-        // En caso de error del servidor, devolver un mensaje con un código 500 (error del servidor)
-        $this->view->response("Error de servidor", 500);
+        $nombre=$store->nombre;
+        $direccion=$store->direccion;
+        $telefono=$store->telefono;
+        $email=$store->email;
+        //verifica que los campos se encuentren completos
+        if (empty($nombre) || empty($direccion) || empty($telefono) || empty($email)) {
+                $this->view->response("Complete los datos", 400);
+            }else{
+                $lastId=$this->model->insertStore($nombre, $direccion, $telefono, $email);
+                $store=$this->model->getStore($lastId);
+                $this->view->response($store, 201);  
             }
+        }catch(Exception $e) {
+            $this->view->response("Error de servidor", 500);
         }
+    }
 
 ```
 
 ### Retorno
 La función no retorna ningún valor directamente. En su lugar, envía una respuesta al cliente utilizando el objeto `view`. Los posibles códigos de estado de respuesta son:
 
-- **200 OK:** Si se añadió la tienda correctamente.
-- **404 Not Found:** Si hubo error al agregar la tienda.
+- **201 Created:** Si se creó la tienda correctamente.
+- **400 Bad request:** Si hubo error en la solicitud de agregar la tienda.
 - **500 Internal Server Error:** Si ocurre un error del servidor al intentar añadir la tienda.
 
-## Ejemplos de uso `http://localhost/proyectos/tiendaDeRopaAPI/api/stores/`
-### Ejemplo 1: Obtención exitosa de la tienda
+## Ejemplos de uso `POST http://localhost/proyectos/tiendaDeRopaAPI/api/stores/`
 
-Si la tienda fue agregada correctamente, la función enviará una respuesta con código 200:
+### Ejemplo 1: Creación exitosa de la tienda
+
+Si la tienda fue agregada correctamente, la función enviará una respuesta con código 201:
 ```json
- "agregado exitoso con id: 1"
+ {
+    "id_tienda": 1,
+    "nombre": "urban clothing CA",
+    "direccion": "Velez 500",
+    "telefono": 22783887,
+    "email": "urbanclothingca@gmail.com"
+}
 ```
 
-### Ejemplo 2: Error al agregar la tienda
+### Ejemplo 2: Error en la solicitud al agregar la tienda
 
-Si la tienda que se intentó añadir no logra concretarse, la función enviará una respuesta con código 404 y un mensaje de error:
+Si la tienda que se intentó añadir no logra concretarse, la función enviará una respuesta con código 400 y un mensaje de error:
 ```json
 {
    {
-    "status": 404,
-    "message": "No se puedo insertar correctamente la tienda"
+    "status": 400,
+    "message": "Complete los datos"
    }
 }
 ```
@@ -311,7 +318,7 @@ La función no retorna ningún valor directamente. En su lugar, envía una respu
 - **404 Not Found:** Si no existe una tienda con el ID dado en la base de datos.
 - **500 Internal Server Error:** Si ocurre un error del servidor al intentar obtener la tienda.
 
-## Ejemplos de uso `http://localhost/proyecto/tiendaDeRopaAPI/api/stores/3`
+## Ejemplos de uso `DELETE http://localhost/proyecto/tiendaDeRopaAPI/api/stores/3`
 ### Ejemplo 1: Cómo eliminar una tienda
 
 Si la tienda solicitada existe en la base de datos, la función enviará una respuesta con código 200:
@@ -389,7 +396,7 @@ La función no retorna ningún valor directamente. En su lugar, envía una respu
 - **404 Not Found:** Si no existe la tienda en la base de datos.
 - **500 Internal Server Error:** Si ocurre un error del servidor al intentar editar la tienda.
 
-## Ejemplos de uso `http://localhost/proyecto/tiendaDeRopaAPI/api/stores/3`
+## Ejemplos de uso `PUT http://localhost/proyecto/tiendaDeRopaAPI/api/stores/3`
 ### Ejemplo 1: Cómo obtener la tienda editada
 
 Si la tienda elegida existe en la base de datos, la función enviará una respuesta con código 200:
