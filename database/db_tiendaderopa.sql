@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-06-2024 a las 03:59:01
+-- Tiempo de generación: 28-06-2024 a las 00:07:45
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -33,7 +33,7 @@ CREATE TABLE `ropa` (
   `descripcion` varchar(250) NOT NULL,
   `precio` double(10,2) NOT NULL,
   `talle` int(11) NOT NULL,
-  `imagen` varchar(250) NOT NULL,
+  `imagen` varchar(250) DEFAULT NULL,
   `id_tienda` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
