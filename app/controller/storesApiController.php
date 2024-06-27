@@ -1,31 +1,22 @@
 <?php
 require_once 'app/model/storesModel.php';
-require_once 'app/view/JSONView.php';
+require_once 'app/controller/controller.php';
 
-class storesApiController {
-
+class storesApiController extends controller{
     private $model;
-    private $view;
-    private $data;
 
     public function __construct() {
+        parent::__construct();
         $this->model = new storesModel();
-        $this->view = new JSONView();
-        $this->data = file_get_contents("php://input");
-    }
-
-    private function getData() {
-        return json_decode($this->data);
     }
 
     public function showingStores() {
         try {
-            $orderBy = isset($_GET['orderBy']) ? $_GET['orderBy'] : 'nombre';
-            $orderDir = isset($_GET['orderDir']) ? strtoupper($_GET['orderDir']) : 'ASC';
-            if ($orderDir != 'ASC' && $orderDir != 'DESC') {
-                $orderDir = 'ASC';
+            if(!empty($_GET['atributo'])){
+                $stores = $this->model->getAll($_GET['atributo'], $_GET['order']);
+            }else{
+                $stores = $this->model->getAll();
             }
-            $stores = $this->model->getAll($orderBy, $orderDir);
             if($stores){
                 $response = [
                 "status" => 200,
@@ -42,7 +33,6 @@ class storesApiController {
 
     public function showingStore($params = null) {
         $id = $params[':ID'];
-
         try {
             $store = $this->model->getStore($id);
             if($store){
@@ -68,18 +58,23 @@ class storesApiController {
     
     public function newStore() {
         try {
-        $store = $newStore = $this->getData();
-        $nombre=$store->nombre;
-        $direccion=$store->direccion;
-        $telefono=$store->telefono;
-        $email=$store->email;
-        if (empty($nombre) || empty($direccion) || empty($telefono) || empty($email)) {
+            $store = $this->getData();
+            $nombre=$store->nombre;
+            $direccion=$store->direccion;
+            $telefono=$store->telefono;
+            $email=$store->email;
+            if (empty($nombre) || empty($direccion) || empty($telefono) || empty($email)) {
                 $this->view->response("Complete los datos", 400);
             }else{
                 $lastId=$this->model->insertStore($nombre, $direccion, $telefono, $email);
                 $store=$this->model->getStore($lastId);
-                $this->view->response($store, 201);  
-            }
+                $response = [
+                    "status" => 201,
+                    "msg" => "Se agrego con éxito la tienda con id $lastId",
+                    "tienda" => $store
+                    ];
+                    $this->view->response($response, 201);  
+                }
         }catch(Exception $e) {
             $this->view->response("Error de servidor", 500);
         }

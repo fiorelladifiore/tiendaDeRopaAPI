@@ -1,6 +1,7 @@
 <?php
     require_once('libs/Router.php');
     require_once('app/controller/storesApiController.php');
+    require_once('app/controller/authApiController.php');
     
 
     $router = new Router();
@@ -12,6 +13,7 @@
     $router->addRoute('stores', 'POST', 'storesApiController', 'newStore');
     $router->addRoute('stores/:ID', 'DELETE', 'storesApiController', 'deleteStore');
     $router->addRoute('stores/:ID', 'PUT', 'storesApiController', 'updateStore');
+    $router->addRoute('auth', 'POST', 'authApiController', 'login');
 
     $router->route($_GET["resource"], $_SERVER['REQUEST_METHOD']);
 

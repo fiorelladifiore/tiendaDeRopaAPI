@@ -4,10 +4,14 @@ require_once "app/model/model.php";
 
 class storesModel extends model{
 
-    function getAll($orderBy, $orderDir){
+    function getAll($atr = null, $order = null){
         $db = $this->getConnection();
-
-        $sentence = $db->prepare("SELECT * FROM tienda ORDER BY $orderBy $orderDir");
+        if($atr){
+            $sql = "SELECT * FROM tienda ORDER BY $atr $order";
+        }else{
+            $sql = "SELECT * FROM tienda";
+        }
+        $sentence = $db->prepare($sql);
         $sentence->execute();
         $stores = $sentence->fetchAll(PDO::FETCH_OBJ);
         return $stores;
@@ -17,8 +21,8 @@ class storesModel extends model{
             $db = $this->getConnection();
     
             $sentence= $db->prepare("INSERT INTO tienda (nombre, direccion, telefono, email) VALUES (?,?,?,?)");
-            $store = $sentence->execute([$nombre, $direccion, $telefono, $email]);
-            return $store;
+            $sentence->execute([$nombre, $direccion, $telefono, $email]);
+            return $db->lastInsertId();
     }
 
     function deleteStore($id){
