@@ -19,14 +19,10 @@
 
     // GET http://localhost/proyectos/tabajoAPI/api/products
     $router->addRoute('products', 'GET', 'productsApiController', 'getProducts');
-    // obtener producto, 1 solo por id
     $router->addRoute('products/:ID', 'GET', 'productsApiController', 'getProduct');
-    // agregar un producto
-    $router->addRoute('product', 'POST', 'productsApiController', 'addProduct');
-    // eliminar un producto
-    $router->addRoute('product/:ID', 'DELETE', 'productsApiController', 'deleteProduct');
-    // editar producto
-    $router->addRoute('product/:ID', 'PUT', 'productsApiController', 'updateProduct');
+    $router->addRoute('products', 'POST', 'productsApiController', 'addProduct');
+    $router->addRoute('products/:ID', 'DELETE', 'productsApiController', 'deleteProduct');
+    $router->addRoute('products/:ID', 'PUT', 'productsApiController', 'updateProduct');
     
     $router->route($_GET["resource"], $_SERVER['REQUEST_METHOD']);
 

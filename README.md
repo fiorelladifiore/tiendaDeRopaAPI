@@ -128,7 +128,10 @@ Si la tienda requerida existe en la base de datos, la función enviará una resp
 Si no existe la tienda demandada en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
 
 ```json
- "No existe la tienda en la base de datos."
+ {
+    "status": 404,
+    "message": "No existe la tienda en la base de datos."
+}
 ```
 
 ### Ejemplo 3: Error de servidor

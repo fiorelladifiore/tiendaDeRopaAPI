@@ -25,9 +25,18 @@ class productsModel extends model{
     function getProduct($id){
         $db = $this->getConnection();
 
-        $sentencia = $db->prepare("SELECT *, t.id_tienda, t.nombre FROM ropa r JOIN tienda t ON r.id_tienda = t.id_tienda WHERE r.id_ropa = ?");
+        $sentencia = $db->prepare("SELECT r.*, t.id_tienda FROM ropa r JOIN tienda t ON r.id_tienda = t.id_tienda WHERE r.id_ropa = ?");
         $sentencia->execute([$id]);
         $product= $sentencia->fetchAll(PDO::FETCH_OBJ);
+        return $product;
+    }
+
+    function getProductEdit($id){
+        $db = $this->getConnection();
+
+        $sentencia = $db->prepare("SELECT *, t.id_tienda, t.nombre FROM ropa r JOIN tienda t ON r.id_tienda = t.id_tienda WHERE r.id_ropa = ?");
+        $sentencia->execute([$id]);
+        $product= $sentencia->fetch(PDO::FETCH_OBJ);
         return $product;
     }
 
@@ -41,7 +50,8 @@ class productsModel extends model{
         $db = $this->getConnection();
 
         $resultado= $db->prepare("INSERT INTO ropa (tipo, descripcion, talle, precio, imagen, id_tienda) VALUES (?,?,?,?,?,?)");
-        $resultado->execute([$tipo, $descripcion, $talle, $precio, $imagen, $id_tienda]); 
+        $resultado->execute([$tipo, $descripcion, $talle, $precio, $imagen, $id_tienda]);
+        return $db->lastInsertId();
     }   
 
     function getStoAndProd(){
@@ -53,25 +63,13 @@ class productsModel extends model{
         return $stores;
     }
 
-     function getProd($id){
+    function updateProduct($tipo, $descripcion, $precio, $talle, $id_tienda, $id){
         $db = $this->getConnection();
-
-         $sentence = $db->prepare("SELECT * FROM ropa WHERE id_ropa = ?");
-         $sentence->execute([$id]);
-         $prod = $sentence->fetch(PDO::FETCH_OBJ);
-         return $prod; 
-     }
-
-     function updateProduct($tipo, $descripcion, $talle, $precio, $id_ropa){
-         $db = $this->getConnection();
     
-         $resultado= $db->prepare("UPDATE ropa SET tipo=?, descripcion=?, talle=?, precio=? WHERE id_ropa = ?");
-         $resultado->execute([$tipo, $descripcion, $talle, $precio, $id_ropa]);
+        $resultado= $db->prepare("UPDATE ropa SET tipo=?, descripcion=?, precio=?, talle=?, id_tienda=? WHERE id_ropa = ?");
+        $resultado->execute([$tipo, $descripcion, $precio, $talle, $id_tienda, $id]);
      }
 
 
 
     }
-
-
-
