@@ -440,3 +440,204 @@ ___
 ## Requisitos y notas adicionales
 - Modelo de tienda debe implementar los siguientes métodos `showingStores`, `showingStore`, `newStore`, `deleteStore`, `updateStore`.
 - Vista que implemente el método `response`.
+
+
+# https://markdown.es/sintaxis-markdown/
+## Índice
+1. [productsApiController](#documentación-productosApiController)
+    - [Función `getTasks()`](#función-gettasks)
+    - [Función `getTask()`](#función-gettask)
+2. [UserApiController](#documentación-userapicontroller)
+    - [Función `getAllUsers()`](#función-getallusers)
+    - [Función `getUser()`](#función-getuser)
+3. [Requisitos y notas adicionales](#requisitos-y-notas-adicionales)
+
+___
+
+# Documentación `productsApiController`
+## Introducción
+"productosApiController" es una clase responsable de manejar solicitudes relacionadas con los productos en nuestra aplicación. Actúa como intermediario entre el cliente y el modelo de datos, proporcionando una interfaz para interactuar con las tareas a través de varias operaciones CRUD (crear, leer, actualizar, eliminar). El objetivo principal de productsApiController es facilitar una gestión de tareas eficiente y organizada, garantizando que todas las operaciones se realicen de forma coherente y segura.
+Cada una de sus características se describe en detalle a continuación.
+
+## Función `getProducts()`
+
+### Descripción
+La función `getProducts` del controlador obtiene todos los productos de la base de datos y envía una respuesta adecuada al cliente basado en el resultado.
+
+### CÓDIGO ESCRITO A MANO (COPY - PASTE DEL CONTROLADOR)
+
+```php
+public function getProducts() {
+        try {
+            // Obtener todas las tareas del modelo
+            $products = $this->model->getAll();
+            if($products){
+                $response = [
+                "status" => 200,
+                "data" => $products
+               ];
+                $this->view->response($response, 200);
+            }
+                 // Si hay productos, devolverlas con un código 200 (éxito)
+            else
+                 $this->view->response("No hay productos en la base de datos", 404);
+                // Si no hay productos, devolver un mensaje con un código 404 (no encontrado)
+        } catch (Exception $e) {
+            // En caso de error del servidor, devolver un mensaje con un código 500 (error del servidor)
+            $this->view->response("Error de servidor", 500);
+        }
+    }
+```
+
+### CÓDIGO GUARDADO COMO IMAGEN
+#### REALIZAR CAPTURA -> GUARDARLA EN CARPETA CORRESPONDIETE
+![Imágen del código de la función getProducts](img/img-products/getProducts.PNG)
+
+### Retorno
+La función no retorna ningún valor directamente. En su lugar, envía una respuesta al cliente utilizando el objeto `view`. Los posibles códigos de estado de respuesta son:
+
+- **200 OK:** Si se obtuvieron productos correctamente.
+- **404 Not Found:** Si no hay products en la base de datos.
+- **500 Internal Server Error:** Si ocurre un error del servidor al intentar obtener los productos.
+
+## Ejemplos de uso `http://localhost/proyectos/tiendaDeRopaAPI/api/products`
+### Ejemplo 1: Obtención exitosa de products
+
+Si hay productos en la base de datos, la función enviará una respuesta con código 200 y los productos en formato JSON:
+```json
+{
+    "status": 200,
+    "data": [
+        {
+            "id": 1,
+            "nombre": "Tarea 1",
+            "descripcion": "Descripción de la tarea 1"
+        },
+        ...
+    ]
+}
+```
+
+### Ejemplo 2: Productos no encontradas
+
+Si no existen productos en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
+```json
+{
+   {
+    "status": 404,
+    "message": "No hay productos en la base de datos"
+   }
+}
+```
+
+### Ejemplo 3: Error de servidor
+
+Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
+
+```json
+{
+    "status": 500,
+    "message": "Error de servidor: [detalles del error]"
+}
+```
+
+### Notas 
+
+- **La inclusión del mensaje de excepción (`$e->getMessage()`) en la respuesta de error del servidor puede ser útil para depuración, pero puede exponer detalles sensibles del servidor. Considera esta práctica con cuidado, especialmente en entornos de producción.** 
+- **Asegúrate de manejar adecuadamente las excepciones y errores en el modelo y la vista para evitar problemas inesperados.** 
+
+
+
+___
+
+
+
+
+## Función `getProduct()`
+
+### Descripción
+La función `getProduct` del controlador obtiene un producto específico de la base de datos y envía una respuesta adecuada al cliente basado en el resultado.
+
+### CÓDIGO ESCRITO A MANO (COPY - PASTE DEL CONTROLADOR)
+
+```php
+   public function getProduct($params = null) {
+        $id = $params[':ID'];
+        
+        try {
+            $id = $this->model->getProduct($id);
+
+            if($id){
+                $response = [
+                "status" => 200,
+                "message" => $id
+               ];
+                $this->view->response($response, 200);
+            }
+            else{ 
+                $response = [
+                    "status" => 404,
+                    "message" => "No existe el producto en la base de datos."
+                ];
+                $this->view->response($response, 404);
+            }
+        } catch (Exception $e) {
+            // En caso de error del servidor, devolver un mensaje con un código 500 (error del servidor)
+            $this->view->response("Error de servidor", 500);
+        }
+
+    }   
+```
+### Parámetros
+**`$params (array)`: Un array asociativo que contiene los parámetros de la solicitud. En este caso, se espera que contenga '`:ID`', el identificador de la tarea que se desea obtener.**
+
+### Retorno
+La función no retorna ningún valor directamente. En su lugar, envía una respuesta al cliente utilizando el objeto `view`. Los posibles códigos de estado de respuesta son:
+
+- **200 OK:** Si se obtuvieron tareas correctamente.
+- **404 Not Found:** Si no hay tareas en la base de datos.
+- **500 Internal Server Error:** Si ocurre un error del servidor al intentar obtener las tareas.
+
+## Ejemplos de uso `http://localhost/proyectos/tiendaDeRopaAPI/api/products/1`
+### Ejemplo 1: Obtención exitosa del producto
+
+Si eñ producto con el ID proporcionado existe, la función enviará una respuesta con código 200 y la tarea en formato JSON:
+```json
+{
+    "status": 200,
+    "data": [
+        {
+            "id": 1,
+            "nombre": "Producto 1",
+            "descripcion": "Descripción del producto"
+        }
+    ]
+}
+```
+
+### Ejemplo 2: Producto no encontradas
+
+Si no existe un producto con el ID proporcionado, la función enviará una respuesta con código 404 y un mensaje de error:
+```json
+{
+   {
+    "status": 404,
+    "message": "No existe el producto con id: 1"
+   }
+}
+```
+
+### Ejemplo 3: Error de servidor
+
+Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
+
+```json
+{
+    "status": 500,
+    "message": "Error de servidor: [detalles del error]"
+}
+```
+
+
+
+
