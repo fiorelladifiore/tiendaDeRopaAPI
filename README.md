@@ -8,13 +8,14 @@
     - [Función `deleteStore()`](#función-deletestore)
     - [Función `updateStore()`](#función-updatestore)
 2. [productsApiController](#documentación-productsapicontroller)
-    - [Función `getproducts()`](#función-getproducts)
-    - [Función `getproduct()`](#función-getproduct)
-    - [Función `addproduct()`](#función-addProduct)
-    - [Función `deleteproduct()`](#función-deleteproduct)
-    - [Función `updateproduct()`](#función-updateproduct)
+    - [Función `getProducts()`](#función-getproducts)
+    - [Función `getProduct()`](#función-getproduct)
+    - [Función `addProduct()`](#función-addProduct)
+    - [Función `deleteProduct()`](#función-deleteproduct)
+    - [Función `updateProduct()`](#función-updateproduct)
 3. [authApiController](#documentación-authapicontroller)
     - [Función `login()`](#función-login)
+4. [Requisitos y notas adicionales](#requisitos-y-notas-adicionales)
 
 
 ___
@@ -41,6 +42,7 @@ En la siguiente imagen se demuestra el ejemplo sin parámetros.
 ![Imagen de cómo usar POSTMAN](img/img-stores/getStores.png)
 
 Si hay tiendas en la base de datos, la función enviará una respuesta con código 200 y las tiendas en formato JSON:
+
 ```json
 {
     "status": 200,
@@ -77,14 +79,14 @@ A su vez los parámetros se pueden colocar en la sección 'Params' de POSTMAN de
 
 ![Imagen usando Query Params](img/img-stores/getStoresParams2.png)
 
-### Ejemplo 2: Tiendas no encontradas
+### Ejemplo 2: Tiendas no encontradas.
 
 Si no existen tiendas en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
 ```json
     "No existen tiendas en la base de datos"
 ```
 
-### Ejemplo 3: Error de servidor
+### Ejemplo 3: Error de servidor.
 
 Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
 
@@ -127,7 +129,7 @@ Si la tienda requerida existe en la base de datos, la función enviará una resp
     }
 }
 ```
-### Ejemplo 2: Tienda no encontrada
+### Ejemplo 2: Tienda no encontrada.
 
 Si no existe la tienda demandada en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
 
@@ -135,7 +137,7 @@ Si no existe la tienda demandada en la base de datos, la función enviará una r
  "No existe la tienda en la base de datos."
 ```
 
-### Ejemplo 3: Error de servidor
+### Ejemplo 3: Error de servidor.
 
 Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
 
@@ -182,14 +184,15 @@ Si la tienda fue agregada correctamente, la función enviará una respuesta con 
 }
 ```
 
-### Ejemplo 2: Error en la solicitud al agregar la tienda
+### Ejemplo 2: Error en la solicitud al agregar la tienda.
 
 Si la tienda que se intentó añadir no logra concretarse por falta de datos, la función enviará una respuesta con código 400 y un mensaje de error:
+
 ```json
  "Complete los datos"
 ```
 
-### Ejemplo 3: Error de servidor
+### Ejemplo 3: Error de servidor.
 
 Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
 
@@ -225,7 +228,7 @@ Si la tienda solicitada para eliminar existe en la base de datos, la función en
 "Tienda 3, eliminada"
 ```
 
-### Ejemplo 2: Tienda no encontrada
+### Ejemplo 2: Tienda no encontrada.
 
 Si no existe la determinada tienda en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
 
@@ -233,7 +236,7 @@ Si no existe la determinada tienda en la base de datos, la función enviará una
  "Tienda 3, no encontrada"
 ```
 
-### Ejemplo 3: Error de servidor
+### Ejemplo 3: Error de servidor.
 
 Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
 
@@ -272,14 +275,306 @@ Si la tienda elegida existe en la base de datos y fue modificada correctamente, 
 "Tienda urban clothing Cba, modificada"
 ```
 
-### Ejemplo 2: Tienda no encontrada
+### Ejemplo 2: Tienda no encontrada.
 
 Si no existe la tienda en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
+
 ```json
 "Tienda urban clothing Cba, no encontrada"
 ```
 
-### Ejemplo 3: Error de servidor
+### Ejemplo 3: Error de servidor.
+
+Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
+
+```json
+"Error de servidor"
+```
+___
+
+# Documentación `productsApiController`
+
+## Introducción
+
+El productsApiController es una clase responsable de manejar solicitudes relacionadas con los productos en nuestra aplicación.
+
+## Función `getProducts()`
+
+### Descripción
+
+La función `getProducts` del controlador obtiene todos los productos de la base de datos y envía una respuesta adecuada al cliente basado en el resultado. Además, se encarga de enviar parámetros de ordenación en caso de que los haya.
+
+## Ejemplos de uso:
+
+### Ejemplo 1: Obtener todos los productos de manera exitosa.
+### Method : `GET`.
+### URL : `tiendaDeRopaAPI/api/products`.
+### Atributos para los parámetros : `attribute`, `order`.
+### Url con parámetros : `tiendaDeRopaAPI/api/products?attribute=tipo&order=DESC`.
+
+En la siguiente imagen se demuestra el ejemplo sin parámetros.
+
+![Imagen de cómo usar POSTMAN](img/img-products/getProducts.png)
+
+Si hay productos en la base de datos, la función enviará una respuesta con código 200 y los productos en formato JSON:
+
+```json
+{
+    "status": 200,
+    "data": [
+        {
+            "id_ropa": 1,
+            "tipo": "Remera",
+            "descripcion": "Marrón",
+            "precio": 250,
+            "talle": 2,
+            "imagen": "remeraLargaMarron.png",
+            "id_tienda": 1
+        },
+        ...
+    ]
+}
+```
+
+## Ejemplos de uso Query Params
+ En el siguiente texto se demuestran los posibles parámetros que puede recibir la URL:
+- **attribute**: Permite filtrar por atributos, los valores que puede tomar son los siguientes:
+    - id_ropa
+    - tipo
+    - descripcion
+    - precio
+    - talle
+    - id_tienda
+    
+- **order**: Permite ordenar dichos atributos, los valores que puede tomar son los siguientes:
+    - ASC
+    - DESC
+
+Imagen donde se muestra el uso de parámetros en la URL:
+
+![Imagen URL usando Query Params](img/img-products/getProductsParams.png)
+
+A su vez los parámetros se pueden colocar en la sección 'Params' de POSTMAN de la siguiente forma:
+
+![Imagen usando Query Params](img/img-products/getProductsParams2.png)
+
+### Ejemplo 2: Productos no encontrados.
+
+Si no existen productos en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
+
+```json
+    "No hay productos en la base de datos"
+```
+
+### Ejemplo 3: Error de servidor.
+
+Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
+
+```json
+ "Error de servidor"
+```
+
+___
+
+## Función `getProduct()`
+
+### Descripción
+La función `getProduct` del controlador obtiene un producto específico de la base de datos mediante el ID y envía una respuesta adecuada al cliente basado en el resultado.
+
+### Parámetros
+**`$params (array)`: Un array asociativo que contiene los parámetros de la solicitud. En este caso, se espera que contenga '`:ID`', el identificador del producto que se desea obtener.**
+
+
+## Ejemplos de uso:
+### Ejemplo 1: Obtener el producto requerido de forma exitosa.
+### Method : `GET`.
+### Params: `{id}`.
+### URL : `tiendaDeRopaAPI/api/products/5`.
+
+En la siguiente imagen se demuestra el ejemplo.
+
+![Imagen de cómo usar POSTMAN](img/img-products/getProduct.png)
+
+Si el producto requerido existe en la base de datos, la función enviará una respuesta con código 200 y el producto en formato JSON:
+
+```json
+{
+    "status": 200,
+    "message": [
+        {
+            "id_ropa": 5,
+            "tipo": "Campera",
+            "descripcion": "Negra",
+            "precio": 300,
+            "talle": 1,
+            "imagen": "camperaNegra.png",
+            "id_tienda": 2
+        }
+    ]
+}
+```
+### Ejemplo 2: Producto no encontrado.
+
+Si no existe el producto solicitado en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
+
+```json
+{
+    "status": 404,
+    "message": "No existe el producto en la base de datos."
+}
+```
+
+### Ejemplo 3: Error de servidor.
+
+Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
+
+```json
+ "Error de servidor"
+```
+
+___
+
+
+## Función `addProduct()`
+
+### Descripción
+La función `addProduct` del controlador agrega un nuevo producto y envía una respuesta adecuada al cliente basado en el resultado.
+
+## Ejemplos de uso:
+
+### Ejemplo 1: Crear un nuevo producto de forma exitosa.
+### Method : `POST`.
+### URL : `tiendaDeRopaAPI/api/products`.
+
+En la siguiente imagen se demuestra el ejemplo de la URL:
+
+![Imagen de cómo usar POSTMAN para crear](img/img-products/addProduct.png)
+
+A su vez se debe escribir los atributos y su valor en el body en formato raw para poder generar el nuevo producto. Ejemplo:
+
+![Imagen de cómo usar POSTMAN body](img/img-products/addProduct2.png)
+
+
+Si el producto fue agregado correctamente, la función enviará una respuesta con código 201:
+
+```json
+{
+    "status": 201,
+    "msg": "Se agregó con éxito el producto con id 45",
+    "producto": [
+        {
+            "id_ropa": 45,
+            "tipo": "Campera",
+            "descripcion": "Azul",
+            "precio": 500,
+            "talle": 2,
+            "imagen": null,
+            "id_tienda": 2
+        }
+    ]
+}
+```
+
+### Ejemplo 2: Error en la solicitud al agregar producto.
+
+Si el producto que se intentó añadir no logra concretarse por falta de datos, la función enviará una respuesta con código 400 y un mensaje de error:
+
+```json
+ "Complete los datos"
+```
+
+### Ejemplo 3: Error de servidor.
+
+Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
+
+```json
+"Error de servidor"
+```
+
+___
+
+## Función `deleteProduct()`
+
+### Descripción
+La función `deleteProduct` del controlador recibe el ID de un producto para posteriormente eliminarlo y envía una respuesta adecuada al cliente basado en el resultado.
+
+### Parámetros
+**`$params (array)`: Un array asociativo que contiene los parámetros de la solicitud. En este caso, se espera que contenga '`:ID`', el identificador del producto que se desea eliminar.**
+
+
+## Ejemplos de uso:
+
+### Ejemplo 1: Eliminar un producto de forma exitosa.
+### Method : `DELETE`.
+### Params: `{id}`.
+### URL : `tiendaDeRopaAPI/api/products/3`.
+
+En la siguiente imagen se demuestra el ejemplo de la URL:
+
+![Imagen de cómo usar POSTMAN para eliminar](img/img-products/deleteProduct.png)
+
+Si el producto solicitado para eliminar existe en la base de datos, la función enviará una respuesta con código 200:
+
+```json
+"Producto 2, eliminado"
+```
+
+### Ejemplo 2: Producto no encontrado.
+
+Si no existe el producto determinado en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
+
+```json
+ "Producto 300, no encontrado"
+```
+
+### Ejemplo 3: Error de servidor.
+
+Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
+
+```json
+"Error de servidor"
+```
+
+___
+
+## Función `updateProduct()`
+
+### Descripción
+La función `updateProduct` del controlador recibe un ID de un producto de la base de datos para modificar los atributos del mismo y envía una respuesta adecuada al cliente basado en el resultado.
+
+### Parámetros
+**`$params (array)`: Un array asociativo que contiene los parámetros de la solicitud. En este caso, se espera que contenga '`:ID`', el identificador del producto que se desea obtener.**
+
+## Ejemplos de uso:
+
+### Ejemplo 1: Editar un producto de forma exitosa.
+### Method : `PUT`.
+### Params: `{id}`.
+### URL : `tiendaDeRopaAPI/api/products/1`.
+
+En la siguiente imagen se demuestra el ejemplo de la URL:
+
+![Imagen de cómo usar POSTMAN para editar](img/img-products/updateProduct.png)
+
+Al igual que al crear un producto, se debe incluir los datos que se quieran modificar en el body en formato raw. Ejemplo, en el cual se modificó el tipo:
+
+![Imagen de cómo usar POSTMAN para editar](img/img-products/updateProduct2.png)
+
+Si el producto elegido existe en la base de datos y fue modificado correctamente, la función enviará una respuesta con código 200:
+
+```json
+"Producto Blusa, editado"
+```
+
+### Ejemplo 2: Producto no encontrado.
+
+Si no existe el producto en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
+
+```json
+"Producto 133, no encontrado"
+```
+
+### Ejemplo 3: Error de servidor.
 
 Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
 
@@ -328,7 +623,7 @@ Si el usuario o contraseña son incorrectos o inexistentes, la función enviará
 "Usuario o contraseña incorrectos"
 ```
 
-### Ejemplo 3: Error de servidor
+### Ejemplo 3: Error de servidor.
 
 Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
 
@@ -339,324 +634,6 @@ ___
 
 ## Requisitos y notas adicionales
 - Modelo de tienda debe implementar los siguientes métodos `showingStores`, `showingStore`, `newStore`, `deleteStore`, `updateStore`.
+- Modelo de productos debe implementar los siguientes métodos `getProducts`, `getProduct`, `addProduct`, `deleteProduct`, `updateProduct`.
 - Modelo de autenticación debe implementar el siguiente método `login`.
 - Vista que implemente el método `response`.
-
-
-# Documentación `PRODUCTOS`
-
-# Documentación `productsApiController`
-## Introducción
-"productosApiController" es una clase responsable de manejar solicitudes relacionadas con los productos en nuestra aplicación. Actúa como intermediario entre el cliente y el modelo de datos, proporcionando una interfaz para interactuar con las tareas a través de varias operaciones CRUD (crear, leer, actualizar, eliminar). El objetivo principal de productsApiController es facilitar una gestión de tareas eficiente y organizada, garantizando que todas las operaciones se realicen de forma coherente y segura.
-Cada una de sus características se describe en detalle a continuación.
-
-## Función `getProducts()`
-
-### Descripción
-La función `getProducts` del controlador obtiene todos los productos de la base de datos y envía una respuesta adecuada al cliente basado en el resultado.
-
-### CÓDIGO ESCRITO A MANO (COPY - PASTE DEL CONTROLADOR)
-
-```php
-public function getProducts() {
-        try {
-            // Obtener todas las tareas del modelo
-            $products = $this->model->getAll();
-            if($products){
-                $response = [
-                "status" => 200,
-                "data" => $products
-               ];
-                $this->view->response($response, 200);
-            }
-                 // Si hay productos, devolverlas con un código 200 (éxito)
-            else
-                 $this->view->response("No hay productos en la base de datos", 404);
-                // Si no hay productos, devolver un mensaje con un código 404 (no encontrado)
-        } catch (Exception $e) {
-            // En caso de error del servidor, devolver un mensaje con un código 500 (error del servidor)
-            $this->view->response("Error de servidor", 500);
-        }
-    }
-```
-
-### CÓDIGO GUARDADO COMO IMAGEN
-#### REALIZAR CAPTURA -> GUARDARLA EN CARPETA CORRESPONDIETE
-![Imágen del código de la función getProducts](img/img-products/getProducts.PNG)
-
-### Retorno
-La función no retorna ningún valor directamente. En su lugar, envía una respuesta al cliente utilizando el objeto `view`. Los posibles códigos de estado de respuesta son:
-
-- **200 OK:** Si se obtuvieron productos correctamente.
-- **404 Not Found:** Si no hay productos en la base de datos.
-- **500 Internal Server Error:** Si ocurre un error del servidor al intentar obtener los productos.
-
-## Ejemplos de uso `http://localhost/proyectos/tiendaDeRopaAPI/api/products`
-### Ejemplo 1: Obtención exitosa de productos
-
-Si hay productos en la base de datos, la función enviará una respuesta con código 200 y los productos en formato JSON:
-```json
-{
-    "status": 200,
-    "data": [
-        {
-            "id": 1,
-            "nombre": "Products 1",
-            "descripcion": "Descripción del Products 1"
-        },
-        ...
-    ]
-}
-```
-
-### Ejemplo 2: Productos no encontradas
-
-Si no existen productos en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
-```json
-{
-   {
-    "status": 404,
-    "message": "No hay productos en la base de datos"
-   }
-}
-```
-
-### Ejemplo 3: Error de servidor
-
-Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
-
-```json
-{
-    "status": 500,
-    "message": "Error de servidor: [detalles del error]"
-}
-```
-
-
-___
-
-
-## Función `getProduct()`
-
-### Descripción
-La función `getProduct` del controlador obtiene un producto específico de la base de datos y envía una respuesta adecuada al cliente basado en el resultado.
-
-### CÓDIGO ESCRITO A MANO (COPY - PASTE DEL CONTROLADOR)
-
-```php
-   public function getProduct($params = null) {
-        $id = $params[':ID'];
-        
-        try {
-            $id = $this->model->getProduct($id);
-
-            if($id){
-                $response = [
-                "status" => 200,
-                "message" => $id
-               ];
-                $this->view->response($response, 200);
-            }
-            else{ 
-                $response = [
-                    "status" => 404,
-                    "message" => "No existe el producto en la base de datos."
-                ];
-                $this->view->response($response, 404);
-            }
-        } catch (Exception $e) {
-            // En caso de error del servidor, devolver un mensaje con un código 500 (error del servidor)
-            $this->view->response("Error de servidor", 500);
-        }
-
-    }   
-```
-### Parámetros
-**`$params (array)`: Un array asociativo que contiene los parámetros de la solicitud. En este caso, se espera que contenga '`:ID`', el identificador de la tarea que se desea obtener.**
-
-### Retorno
-La función no retorna ningún valor directamente. En su lugar, envía una respuesta al cliente utilizando el objeto `view`. Los posibles códigos de estado de respuesta son:
-
-- **200 OK:** Si se obtuvieron los productos correctamente.
-- **404 Not Found:** Si no hay productos en la base de datos.
-- **500 Internal Server Error:** Si ocurre un error del servidor al intentar obtener los productos.
-
-## Ejemplos de uso `http://localhost/proyectos/tiendaDeRopaAPI/api/products/1`
-### Ejemplo 1: Obtención exitosa del producto
-
-Si el producto con el ID proporcionado existe, la función enviará una respuesta con código 200 y la tarea en formato JSON:
-```json
-{
-    "status": 200,
-    "data": [
-        {
-            "id": 1,
-            "nombre": "Producto 1",
-            "descripcion": "Descripción del producto"
-        }
-    ]
-}
-```
-
-### Ejemplo 2: Producto no encontrado
-
-Si no existe un producto con el ID proporcionado, la función enviará una respuesta con código 404 y un mensaje de error:
-```json
-{
-   {
-    "status": 404,
-    "message": "No existe el producto con id: 1"
-   }
-}
-```
-
-### Ejemplo 3: Error de servidor
-
-Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
-
-```json
-{
-    "status": 500,
-    "message": "Error de servidor: [detalles del error]"
-}
-```
-
-___
-
-
-## Función `addProduct()`
-
-### Descripción
-La función `addProduct` del controlador agrega un producto nuevo y envía una respuesta adecuada al cliente basado en el resultado.
-
-## Ejemplos de uso:
-
-### Ejemplo 1: Crear un nuevo producto de forma exitosa.
-### Method : `POST`.
-### URL : `tiendaDeRopaAPI/api/products/`.
-
-En la siguiente imagen se demuestra el ejemplo de la URL:
-
-![Imagen de cómo usar POSTMAN para agregar un producto](img/img-products/addProduct.PNG)
-
-A su vez se debe escribir los atributos y su valor en el body en formato raw para poder generar el nuevo producto. Ejemplo:
-
-![Imagen de cómo usar POSTMAN body](////////////////////////////////)
-
-
-Si el producto fue agregada correctamente, la función enviará una respuesta con código 201:
-
-```json
-{
-   /////////////////////////
-   
-}
-```
-
-### Ejemplo 2: Error en la solicitud al agregar un producto
-
-Si el producto que se intentó añadir no logra concretarse por falta de datos, la función enviará una respuesta con código 400 y un mensaje de error:
-```json
- "Complete los datos"
-```
-
-### Ejemplo 3: Error de servidor
-
-Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
-
-```json
-"Error de servidor"
-```
-
-
-___
-
-
-## Función `deleteProduct()`
-
-### Descripción
-La función `deleteProduct` del controlador recibe el ID de un producto para posteriormente eliminarlo y envía una respuesta adecuada al cliente basado en el resultado.
-
-### Parámetros
-**`$params (array)`: Un array asociativo que contiene los parámetros de la solicitud. En este caso, se espera que contenga '`:ID`', el identificador de la tienda que se desea eliminar.**
-
-
-## Ejemplos de uso:
-
-### Ejemplo 1: Eliminar un producto de forma exitosa.
-### Method : `DELETE`.
-### Params: `{id}`.
-### URL : `tiendaDeRopaAPI/api/product/1`.
-
-En la siguiente imagen se demuestra el ejemplo de la URL:
-
-![Imagen de cómo usar POSTMAN para eliminar](img/img-products/deleteProduct.PNG)
-
-Si el producto solicitado para eliminar existe en la base de datos, la función enviará una respuesta con código 200:
-
-```json
-"Producto 1, eliminado"
-```
-
-### Ejemplo 2: Producto no encontrado
-
-Si no existe el determinado producto en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
-
-```json
- "Tienda 3, no encontrada"
-```
-
-### Ejemplo 3: Error de servidor
-
-Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
-
-```json
-"Error de servidor"
-```
-
-___
-
-
-## Función `updateProduct()`
-
-### Descripción
-La función `updateProduct` del controlador recibe un ID de un producto de la base de datos para modificar los atributos del mismo y envía una respuesta adecuada al cliente basado en el resultado.
-
-### Parámetros
-**`$params (array)`: Un array asociativo que contiene los parámetros de la solicitud. En este caso, se espera que contenga '`:ID`', el identificador de la tienda que se desea obtener.**
-
-## Ejemplos de uso:
-
-### Ejemplo 1: Editar un producto de forma exitosa.
-### Method : `PUT`.
-### Params: `{id}`.
-### URL : `tiendaDeRopaAPI/api/product/1`.
-
-En la siguiente imagen se demuestra el ejemplo de la URL:
-
-![Imagen de cómo usar POSTMAN para editar](img/img-products/updateProduct.PNG)
-
-Al igual que al crear un producto, se debe incluir los datos que se quieran modificar en el body en formato raw. Ejemplo, en el cual se modificó la dirección:
-
-![Imagen de cómo usar POSTMAN para editar](img/img-products/updateProduct2.PNG)
-
-Si el producto elegido existe en la base de datos y fue modificada correctamente, la función enviará una respuesta con código 200:
-
-```json
-"Producto , editado"
-```
-
-### Ejemplo 2: Producto no encontrado
-
-Si no existe el producto en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
-```json
-"Producto, no encontrado"
-```
-
-### Ejemplo 3: Error de servidor
-
-Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
-
-```json
-"Error de servidor"
-```

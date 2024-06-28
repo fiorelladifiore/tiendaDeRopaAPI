@@ -71,7 +71,7 @@ class productsApiController extends controller{
                 $product=$this->model->getProduct($lastId);
                 $response=[
                     "status" => 201,
-                    "msg" => "Se agrego con éxito el producto con id $lastId",
+                    "msg" => "Se agregó con éxito el producto con id $lastId",
                     "producto" => $product
                     ];
                     $this->view->response($response, 201);  
@@ -90,7 +90,7 @@ class productsApiController extends controller{
 
             $this->view->response("Producto $id, eliminado", 200);
         } else {
-            $this->view->response("Product $id, no encontrado", 404);
+            $this->view->response("Producto $id, no encontrado", 404);
         }
     } catch (Exception $e) {
         $this->view->response("Error de servidor", 500);
