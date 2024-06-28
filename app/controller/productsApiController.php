@@ -32,7 +32,7 @@ class productsApiController {
                 // Si hay productos, devolverlas con un código 200 (éxito)
             }
             else
-                $this->view->response("No hay productos en la base de datos", 404);
+                 $this->view->response("No hay productos en la base de datos", 404);
                  // Si no hay productos, devolver un mensaje con un código 404 (no encontrado)
         } catch (Exception $e) {
             // En caso de error del servidor, devolver un mensaje con un código 500 (error del servidor)

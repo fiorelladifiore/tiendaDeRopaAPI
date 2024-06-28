@@ -2,6 +2,7 @@
     require_once('libs/Router.php');
     require_once('app/controller/storesApiController.php');
     require_once('app/controller/authApiController.php');
+    require_once('app/controller/productsApiController.php');
     
 
     $router = new Router();
@@ -14,13 +15,7 @@
     $router->addRoute('stores/:ID', 'DELETE', 'storesApiController', 'deleteStore');
     $router->addRoute('stores/:ID', 'PUT', 'storesApiController', 'updateStore');
     $router->addRoute('auth', 'POST', 'authApiController', 'login');
-
-    <?php
-    require_once('libs/Router.php');
-    require_once('app/controller/productsApiController.php');
-    
-
-    $router = new Router();
+  
 
     // GET http://localhost/proyectos/tabajoAPI/api/products
     $router->addRoute('products', 'GET', 'productsApiController', 'getProducts');
