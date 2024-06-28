@@ -12,7 +12,11 @@ class productsApiController extends controller{
 
     public function getProducts() {
         try {
-            $products = $this->model->getAll();
+            if(!empty($_GET['attribute'])){
+                $products = $this->model->getAll($_GET['attribute'], $_GET['order']);
+            }else{
+                $products = $this->model->getAll();
+            }
             if($products){
                 $response = [
                 "status" => 200,

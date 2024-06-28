@@ -4,10 +4,14 @@ require_once "app/model/model.php";
 
 class productsModel extends model{
 
-    function getAll(){
+    function getAll($atr = null, $order = null){
         $db = $this->getConnection();
-
-        $sentencia = $db->prepare("SELECT * FROM ropa");
+        if($atr){
+            $sql = "SELECT * FROM ropa ORDER BY $atr $order";
+        }else{
+            $sql = "SELECT * FROM ropa";
+        }
+        $sentencia = $db->prepare($sql);
         $sentencia->execute();
         $products= $sentencia->fetchAll(PDO::FETCH_OBJ);
         return $products;
