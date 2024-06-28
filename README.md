@@ -1,3 +1,5 @@
+# Documentación del proyecto Tienda de ropa
+
 ## Índice
 1. [storesApiController](#documentación-storesapicontroller)
     - [Función `showingStores()`](#función-showingstores)
@@ -5,57 +7,34 @@
     - [Función `newStore()`](#función-newstore)
     - [Función `deleteStore()`](#función-deletestore)
     - [Función `updateStore()`](#función-updatestore)
+2. [productsApiController](#documentación-productsapicontroller)
+    - [Función `products()`](#función-products)
+3. [authApiController](#documentación-authapicontroller)
+    - [Función `login()`](#función-login)
 
 
 ___
 
 # Documentación `storesApiController`
+
 ## Introducción
-El storesApiController es una clase encargada de manejar las solicitudes relacionadas con las tiendas dentro de nuestra aplicación. Actúa como un intermediario entre el cliente y el modelo de datos, proporcionando una interfaz para interactuar con las tiendas a través de varias operaciones CRUD (Crear, Leer, Actualizar, Eliminar). El objetivo principal del storesApiController es facilitar una gestión eficiente y organizada de las tiendas, garantizando que todas las operaciones se realicen de manera coherente y segura.
-A continuación se detallan cada una de sus funciones.
+El storesApiController es una clase encargada de manejar las solicitudes relacionadas con las tiendas dentro de nuestra aplicación.
 
 ## Función `showingStores()`
 
 ### Descripción
 La función `showingStores` del controlador obtiene todas las tiendas de la base de datos y envía una respuesta adecuada al cliente basado en el resultado. Además, se encarga de enviar parámetros de ordenación en caso de que los haya.
 
-### CÓDIGO ESCRITO A MANO (COPY - PASTE DEL CONTROLADOR)
+## Ejemplos de uso:
+### Ejemplo 1: Obtener todas las tiendas de manera exitosa.
+### Method : `GET`.
+### URL : `tiendaDeRopaAPI/api/stores`.
+### Atributos para los parámetros : `attribute`, `order`.
+### Url con parámetros : `tiendaDeRopaAPI/api/stores?attribute=telefono&order=DESC`.
 
-```php
- public function showingStores() {
-        try {
-            //se asigna un orden predeterminado en caso de que no haya parámetros.
-            $orderBy = isset($_GET['orderBy']) ? $_GET['orderBy'] : 'nombre';
-            $orderDir = isset($_GET['orderDir']) ? strtoupper($_GET['orderDir']) : 'ASC';
-            //Verifica que si no se inserta una dirección válida, use una predeterminada.
-            if ($orderDir != 'ASC' && $orderDir != 'DESC') {
-                $orderDir = 'ASC';
-            }
-            $stores = $this->model->getAll($orderBy, $orderDir);
-            if($stores){
-                $response = [
-                "status" => 200,
-                "data" => $stores
-               ];
-                $this->view->response($response, 200);
-            }else{
-                $this->view->response("No existen tiendas en la base de datos", 404);
-            }
-        } catch (Exception $e) {
-                $this->view->response("Error de servidor", 500);
-        }
-    }
-```
+En la siguiente imagen se demuestra el ejemplo sin parámetros.
 
-### Retorno
-La función no retorna ningún valor directamente. En su lugar, envía una respuesta al cliente utilizando el objeto `view`. Los posibles códigos de estado de respuesta son:
-
-- **200 OK:** Si se obtuvieron tiendas correctamente.
-- **404 Not Found:** Si no hay tiendas en la base de datos.
-- **500 Internal Server Error:** Si ocurre un error del servidor al intentar obtener las tiendas.
-
-## Ejemplos de uso `GET http://localhost/proyecto/tiendaDeRopaAPI/api/stores`
-### Ejemplo 1: Cómo obtener todas las tiendas
+![Imagen de cómo usar POSTMAN](img/img-stores/getStores.png)
 
 Si hay tiendas en la base de datos, la función enviará una respuesta con código 200 y las tiendas en formato JSON:
 ```json
@@ -63,27 +42,42 @@ Si hay tiendas en la base de datos, la función enviará una respuesta con códi
     "status": 200,
     "data": [
         {
-        "id_tienda": 1,
-        "nombre": "urban clothing CA",
-        "direccion": "arce 500",
-        "telefono": 22783887,
-        "email": "urbanclothingca@gmail.com"
+            "id_tienda": 1,
+            "nombre": "Urban clothing BA",
+            "direccion": "Montevideo 181",
+            "telefono": 11617287,
+            "email": "urbanclothingba@gmail.com"
         },
         ...
     ]
 }
 ```
+## Ejemplos de uso Query Params
+ En el siguiente texto se demuestran los posibles parámetros que puede recibir la URL:
+- **attribute**: Permite filtrar por atributos, los valores que puede tomar son los siguientes:
+    - id_tienda
+    - nombre
+    - direccion
+    - telefono
+    - email
+    
+- **order**: Permite ordenar dichos atributos, los valores que puede tomar son los siguientes:
+    - ASC
+    - DESC
 
-### Ejemplo 2: tiendas no encontradas
+Imagen donde se muestra el uso de parámetros en la URL:
+
+![Imagen URL usando Query Params](img/img-stores/getStoresParams1.png)
+
+A su vez los parámetros se pueden colocar en la sección 'Params' de POSTMAN de la siguiente forma:
+
+![Imagen usando Query Params](img/img-stores/getStoresParams2.png)
+
+### Ejemplo 2: Tiendas no encontradas
 
 Si no existen tiendas en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
 ```json
-{
-   {
-    "status": 404,
-    "message": "No existen tiendas en la base de datos"
-   }
-}
+    "No existen tiendas en la base de datos"
 ```
 
 ### Ejemplo 3: Error de servidor
@@ -91,18 +85,8 @@ Si no existen tiendas en la base de datos, la función enviará una respuesta co
 Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
 
 ```json
-{
-    "status": 500,
-    "message": "Error de servidor"
-}
+ "Error de servidor"
 ```
-
-### Notas 
-
-- **La inclusión del mensaje de excepción (`$e->getMessage()`) en la respuesta de error del servidor puede ser útil para depuración, pero puede exponer detalles sensibles del servidor. Considera esta práctica con cuidado, especialmente en entornos de producción.** 
-- **Asegúrate de manejar adecuadamente las excepciones y errores en el modelo y la vista para evitar problemas inesperados.** 
-
-
 
 ___
 
@@ -111,72 +95,40 @@ ___
 ### Descripción
 La función `showingStore` del controlador obtiene una tienda específica de la base de datos mediante el ID y envía una respuesta adecuada al cliente basado en el resultado.
 
-### CÓDIGO ESCRITO A MANO (COPY - PASTE DEL CONTROLADOR)
-
-```php
- public function showingStore($params = null) {
-        $id = $params[':ID'];
-        try {
-            $store = $this->model->getStore($id);
-            if($store){
-                $response = [
-                "status" => 200,
-                "message" => $store
-               ];
-                $this->view->response($response, 200);
-            }
-            else{
-                $response = [
-                    "status" => 404,
-                    "message" => "No existe la tienda en la base de datos."
-                ];
-                $this->view->response($response, 404);
-            }
-        } catch (Exception $e) {
-            $this->view->response("Error de servidor", 500);
-        }
-    }  
-```
 ### Parámetros
 **`$params (array)`: Un array asociativo que contiene los parámetros de la solicitud. En este caso, se espera que contenga '`:ID`', el identificador de la tienda que se desea obtener.**
 
-### Retorno
-La función no retorna ningún valor directamente. En su lugar, envía una respuesta al cliente utilizando el objeto `view`. Los posibles códigos de estado de respuesta son:
 
-- **200 OK:** Si se obtuvo la tienda correctamente.
-- **404 Not Found:** Si no existe tienda solicitada en la base de datos.
-- **500 Internal Server Error:** Si ocurre un error del servidor al intentar obtener la tienda.
+## Ejemplos de uso:
+### Ejemplo 1: Obtener la tienda solicitada de forma exitosa.
+### Method : `GET`.
+### Params: `{id}`.
+### URL : `tiendaDeRopaAPI/api/stores/2`.
 
-## Ejemplos de uso `GET http://localhost/proyecto/tiendaDeRopaAPI/api/stores/3`
-### Ejemplo 1: Cómo obtener una tienda
+En la siguiente imagen se demuestra el ejemplo.
 
-Si existe la tienda solicitada en la base de datos, la función enviará una respuesta con código 200 y la tienda en formato JSON:
+![Imagen de cómo usar POSTMAN](img/img-stores/getStore.png)
+
+Si la tienda requerida existe en la base de datos, la función enviará una respuesta con código 200 y la tienda en formato JSON:
+
 ```json
 {
     "status": 200,
-    "data": [
-        {
-        "id_tienda": 3,
-        "nombre": "Urban clothing SF",
-        "direccion": "Alvear 678",
-        "telefono": 342413982,
-        "email": "urbanclothingsf@gmail.com"
-        },
-        ...
-    ]
+    "message": {
+        "id_tienda": 2,
+        "nombre": "Urban clothing Cba",
+        "direccion": "Ameghino 110",
+        "telefono": 351569877,
+        "email": "urbanclothingcba@gmail.com"
+    }
 }
 ```
-
-### Ejemplo 2: tienda no encontrada
+### Ejemplo 2: Tienda no encontrada
 
 Si no existe la tienda demandada en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
+
 ```json
-{
-   {
-    "status": 404,
-    "message": "No existe la tienda en la base de datos."
-   }
-}
+ "No existe la tienda en la base de datos."
 ```
 
 ### Ejemplo 3: Error de servidor
@@ -184,84 +136,53 @@ Si no existe la tienda demandada en la base de datos, la función enviará una r
 Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
 
 ```json
-{
-    "status": 500,
-    "message": "Error de servidor"
-}
+ "Error de servidor"
 ```
 
-### Notas 
-
-- **La inclusión del mensaje de excepción (`$e->getMessage()`) en la respuesta de error del servidor puede ser útil para depuración, pero puede exponer detalles sensibles del servidor. Considera esta práctica con cuidado, especialmente en entornos de producción.** 
-- **Asegúrate de manejar adecuadamente las excepciones y errores en el modelo y la vista para evitar problemas inesperados.** 
-
-
-
-
 ___
+
 
 ## Función `newStore()`
 
 ### Descripción
 La función `newStore` del controlador agrega una nueva tienda y envía una respuesta adecuada al cliente basado en el resultado.
 
-### CÓDIGO ESCRITO A MANO (COPY - PASTE DEL CONTROLADOR)
+## Ejemplos de uso:
 
-```php
- public function newStore() {
-        try {
-        $store = $newStore = $this->getData();
-        $nombre=$store->nombre;
-        $direccion=$store->direccion;
-        $telefono=$store->telefono;
-        $email=$store->email;
-        //verifica que los campos se encuentren completos
-        if (empty($nombre) || empty($direccion) || empty($telefono) || empty($email)) {
-                $this->view->response("Complete los datos", 400);
-            }else{
-                $lastId=$this->model->insertStore($nombre, $direccion, $telefono, $email);
-                $store=$this->model->getStore($lastId);
-                $this->view->response($store, 201);  
-            }
-        }catch(Exception $e) {
-            $this->view->response("Error de servidor", 500);
-        }
-    }
+### Ejemplo 1: Crear una nueva tienda de forma exitosa.
+### Method : `POST`.
+### URL : `tiendaDeRopaAPI/api/stores`.
 
-```
+En la siguiente imagen se demuestra el ejemplo de la URL:
 
-### Retorno
-La función no retorna ningún valor directamente. En su lugar, envía una respuesta al cliente utilizando el objeto `view`. Los posibles códigos de estado de respuesta son:
+![Imagen de cómo usar POSTMAN para crear](img/img-stores/newStore.png)
 
-- **201 Created:** Si se creó la tienda correctamente.
-- **400 Bad request:** Si hubo error en la solicitud de agregar la tienda.
-- **500 Internal Server Error:** Si ocurre un error del servidor al intentar añadir la tienda.
+A su vez se debe escribir los atributos y su valor en el body en formato raw para poder generar la nueva tienda. Ejemplo:
 
-## Ejemplos de uso `POST http://localhost/proyectos/tiendaDeRopaAPI/api/stores/`
+![Imagen de cómo usar POSTMAN body](img/img-stores/newStore2.png)
 
-### Ejemplo 1: Creación exitosa de la tienda
 
 Si la tienda fue agregada correctamente, la función enviará una respuesta con código 201:
+
 ```json
- {
-    "id_tienda": 1,
-    "nombre": "urban clothing CA",
-    "direccion": "Velez 500",
-    "telefono": 22783887,
-    "email": "urbanclothingca@gmail.com"
+{
+    "status": 201,
+    "msg": "Se agrego con éxito la tienda con id 7",
+    "tienda": {
+        "id_tienda": 7,
+        "nombre": "urban clothing Tc",
+        "direccion": "Mitre 70",
+        "telefono": 273782737,
+        "email": "urbanclothintc@gmail.com"
+    }
 }
 ```
 
 ### Ejemplo 2: Error en la solicitud al agregar la tienda
 
-Si la tienda que se intentó añadir no logra concretarse, la función enviará una respuesta con código 400 y un mensaje de error:
+Si la tienda que se intentó añadir no logra concretarse por falta de datos, la función enviará una respuesta con código 400 y un mensaje de error:
 ```json
-{
-   {
-    "status": 400,
-    "message": "Complete los datos"
-   }
-}
+ "Complete los datos"
 ```
 
 ### Ejemplo 3: Error de servidor
@@ -269,18 +190,8 @@ Si la tienda que se intentó añadir no logra concretarse, la función enviará 
 Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
 
 ```json
-{
-    "status": 500,
-    "message": "Error de servidor"
-}
+"Error de servidor"
 ```
-
-### Notas 
-
-- **La inclusión del mensaje de excepción (`$e->getMessage()`) en la respuesta de error del servidor puede ser útil   para depuración, pero puede exponer detalles sensibles del servidor. Considera esta práctica con cuidado, especialmente en entornos de producción.** 
-- **Asegúrate de manejar adecuadamente las excepciones y errores en el modelo y la vista para evitar problemas inesperados.** 
-
-
 
 ___
 
@@ -289,39 +200,23 @@ ___
 ### Descripción
 La función `deleteStore` del controlador recibe el ID de una tienda para posteriormente eliminarla y envía una respuesta adecuada al cliente basado en el resultado.
 
-### CÓDIGO ESCRITO A MANO (COPY - PASTE DEL CONTROLADOR)
-
-```php
-  public function deleteStore($params = null) {
-        try{
-        $id = $params[':ID'];
-        $store = $this->model->getStore($id);
-        if ($store) {
-            $this->model->deleteStore($id);
-
-            $this->view->response("Tienda $id, eliminada", 200);
-        } else {
-            $this->view->response("Tienda $id, no encontrada", 404);
-            }
-        }catch(Exception $e) {
-        $this->view->response("Error de servidor", 500);
-            }
-        }
-```
 ### Parámetros
-**`$params (array)`: Un array asociativo que contiene los parámetros de la solicitud. En este caso, se espera que contenga '`:ID`', el identificador de la tienda que se desea obtener.**
+**`$params (array)`: Un array asociativo que contiene los parámetros de la solicitud. En este caso, se espera que contenga '`:ID`', el identificador de la tienda que se desea eliminar.**
 
-### Retorno
-La función no retorna ningún valor directamente. En su lugar, envía una respuesta al cliente utilizando el objeto `view`. Los posibles códigos de estado de respuesta son:
 
-- **200 OK:** Si se eliminó la tienda correctamente.
-- **404 Not Found:** Si no existe una tienda con el ID dado en la base de datos.
-- **500 Internal Server Error:** Si ocurre un error del servidor al intentar obtener la tienda.
+## Ejemplos de uso:
 
-## Ejemplos de uso `DELETE http://localhost/proyecto/tiendaDeRopaAPI/api/stores/3`
-### Ejemplo 1: Cómo eliminar una tienda
+### Ejemplo 1: Eliminar una tienda de forma exitosa.
+### Method : `DELETE`.
+### Params: `{id}`.
+### URL : `tiendaDeRopaAPI/api/stores/3`.
 
-Si la tienda solicitada existe en la base de datos, la función enviará una respuesta con código 200:
+En la siguiente imagen se demuestra el ejemplo de la URL:
+
+![Imagen de cómo usar POSTMAN para eliminar](img/img-stores/deleteStore.png)
+
+Si la tienda solicitada para eliminar existe en la base de datos, la función enviará una respuesta con código 200:
+
 ```json
 "Tienda 3, eliminada"
 ```
@@ -329,13 +224,9 @@ Si la tienda solicitada existe en la base de datos, la función enviará una res
 ### Ejemplo 2: Tienda no encontrada
 
 Si no existe la determinada tienda en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
+
 ```json
-{
-   {
-    "status": 404,
-    "message": "No existe la tienda en la base de datos"
-   }
-}
+ "Tienda 3, no encontrada"
 ```
 
 ### Ejemplo 3: Error de servidor
@@ -343,63 +234,36 @@ Si no existe la determinada tienda en la base de datos, la función enviará una
 Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
 
 ```json
-{
-    "status": 500,
-    "message": "Error de servidor"
-}
+"Error de servidor"
 ```
-
-### Notas 
-
-- **La inclusión del mensaje de excepción (`$e->getMessage()`) en la respuesta de error del servidor puede ser útil para depuración, pero puede exponer detalles sensibles del servidor. Considera esta práctica con cuidado, especialmente en entornos de producción.** 
-- **Asegúrate de manejar adecuadamente las excepciones y errores en el modelo y la vista para evitar problemas inesperados.** 
-
-
 
 ___
 
 ## Función `updateStore()`
 
 ### Descripción
-La función `updateStore` del controlador recibe un ID de una tienda de la base de datos para modificar los atributos de esta y envía una respuesta adecuada al cliente basado en el resultado.
+La función `updateStore` del controlador recibe un ID de una tienda de la base de datos para modificar los atributos de la misma y envía una respuesta adecuada al cliente basado en el resultado.
 
-### CÓDIGO ESCRITO A MANO (COPY - PASTE DEL CONTROLADOR)
-
-```php
-public function updateStore($params = null) {
-        try{
-        $id = $params[':ID'];
-        $store = $this->model->getStore($id);
-        if ($store) {
-            $store = $this->getData();
-            $nombre = $store->nombre;
-            $direccion = $store->direccion; 
-            $telefono = $store->telefono;
-            $email = $store->email;
-            $this->model->updateStore($nombre, $direccion, $telefono, $email, $id);   
-            $this->view->response("Tienda $nombre, modificada", 200);
-        } else {
-            $this->view->response("Tienda $id, no encontrada", 404);
-            }
-        }catch(Exception $e) {
-        $this->view->response("Error de servidor", 500);
-        }
-    }
-```
 ### Parámetros
 **`$params (array)`: Un array asociativo que contiene los parámetros de la solicitud. En este caso, se espera que contenga '`:ID`', el identificador de la tienda que se desea obtener.**
 
-### Retorno
-La función no retorna ningún valor directamente. En su lugar, envía una respuesta al cliente utilizando el objeto `view`. Los posibles códigos de estado de respuesta son:
+## Ejemplos de uso:
 
-- **200 OK:** Si se editó la tienda correctamente.
-- **404 Not Found:** Si no existe la tienda en la base de datos.
-- **500 Internal Server Error:** Si ocurre un error del servidor al intentar editar la tienda.
+### Ejemplo 1: Editar una tienda de forma exitosa.
+### Method : `PUT`.
+### Params: `{id}`.
+### URL : `tiendaDeRopaAPI/api/stores/1`.
 
-## Ejemplos de uso `PUT http://localhost/proyecto/tiendaDeRopaAPI/api/stores/3`
-### Ejemplo 1: Cómo obtener la tienda editada
+En la siguiente imagen se demuestra el ejemplo de la URL:
 
-Si la tienda elegida existe en la base de datos, la función enviará una respuesta con código 200:
+![Imagen de cómo usar POSTMAN para editar](img/img-stores/updateStore.png)
+
+Al igual que al crear una tienda, se debe incluir los datos que se quieran modificar en el body en formato raw. Ejemplo, en el cual se modificó la dirección:
+
+![Imagen de cómo usar POSTMAN para editar](img/img-stores/updateStore2.png)
+
+Si la tienda elegida existe en la base de datos y fue modificada correctamente, la función enviará una respuesta con código 200:
+
 ```json
 "Tienda urban clothing Cba, modificada"
 ```
@@ -408,12 +272,7 @@ Si la tienda elegida existe en la base de datos, la función enviará una respue
 
 Si no existe la tienda en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
 ```json
-{
-   {
-    "status": 404,
-    "message": "Tienda urban clothing Cba, no encontrada"
-   }
-}
+"Tienda urban clothing Cba, no encontrada"
 ```
 
 ### Ejemplo 3: Error de servidor
@@ -421,223 +280,60 @@ Si no existe la tienda en la base de datos, la función enviará una respuesta c
 Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
 
 ```json
+"Error de servidor"
+```
+___
+
+# Documentación `authApiController`
+
+## Introducción
+El authApiController es una clase encargada de manejar el inicio de sesión dentro de nuestra aplicación.
+
+## Función `login()`
+
+### Descripción
+La función `login` del controlador obtiene los datos de inicio de sesión y envía una respuesta adecuada al cliente basado en el resultado.
+
+## Ejemplos de uso
+### Ejemplo 1: Iniciar Sesión.
+### Method : `POST`.
+### URL : `tiendaDeRopaAPI/api/auth`.
+
+En la siguiente imagen se demuestra el ejemplo.
+
+![Imagen de cómo usar POSTMAN](img/img-stores/login.png)
+
+Se debe agregar los atributos con sus valores para poder iniciar sesión. Esto se realiza en el body de forma raw. Ejemplo:
+
+![Imagen de cómo usar POSTMAN](img/img-stores/login2.png)
+
+Si el usuario existe en la base de datos, la función enviará una respuesta con código 200 y los datos del usuario en formato JSON:
+
+```json
 {
-    "status": 500,
-    "message": "Error de servidor"
+    "user": "webadmin",
+    "password": "admin"
 }
 ```
 
-### Notas 
+### Ejemplo 2: Usuario no encontrado.
 
-- **La inclusión del mensaje de excepción (`$e->getMessage()`) en la respuesta de error del servidor puede ser útil para depuración, pero puede exponer detalles sensibles del servidor. Considera esta práctica con cuidado, especialmente en entornos de producción.** 
-- **Asegúrate de manejar adecuadamente las excepciones y errores en el modelo y la vista para evitar problemas inesperados.** 
+Si el usuario o contraseña son incorrectos o inexistentes, la función enviará una respuesta con código 404 y un mensaje de error:
 
+```json
+"Usuario o contraseña incorrectos"
+```
 
+### Ejemplo 3: Error de servidor
 
+Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
 
+```json
+"Error de servidor"
+```
 ___
 
 ## Requisitos y notas adicionales
 - Modelo de tienda debe implementar los siguientes métodos `showingStores`, `showingStore`, `newStore`, `deleteStore`, `updateStore`.
+- Modelo de autenticación debe implementar el siguiente método `login`.
 - Vista que implemente el método `response`.
-
-
-# https://markdown.es/sintaxis-markdown/
-## Índice
-1. [productsApiController](#documentación-productosApiController)
-    - [Función `getTasks()`](#función-gettasks)
-    - [Función `getTask()`](#función-gettask)
-2. [UserApiController](#documentación-userapicontroller)
-    - [Función `getAllUsers()`](#función-getallusers)
-    - [Función `getUser()`](#función-getuser)
-3. [Requisitos y notas adicionales](#requisitos-y-notas-adicionales)
-
-___
-
-# Documentación `productsApiController`
-## Introducción
-"productosApiController" es una clase responsable de manejar solicitudes relacionadas con los productos en nuestra aplicación. Actúa como intermediario entre el cliente y el modelo de datos, proporcionando una interfaz para interactuar con las tareas a través de varias operaciones CRUD (crear, leer, actualizar, eliminar). El objetivo principal de productsApiController es facilitar una gestión de tareas eficiente y organizada, garantizando que todas las operaciones se realicen de forma coherente y segura.
-Cada una de sus características se describe en detalle a continuación.
-
-## Función `getProducts()`
-
-### Descripción
-La función `getProducts` del controlador obtiene todos los productos de la base de datos y envía una respuesta adecuada al cliente basado en el resultado.
-
-### CÓDIGO ESCRITO A MANO (COPY - PASTE DEL CONTROLADOR)
-
-```php
-public function getProducts() {
-        try {
-            // Obtener todas las tareas del modelo
-            $products = $this->model->getAll();
-            if($products){
-                $response = [
-                "status" => 200,
-                "data" => $products
-               ];
-                $this->view->response($response, 200);
-            }
-                 // Si hay productos, devolverlas con un código 200 (éxito)
-            else
-                 $this->view->response("No hay productos en la base de datos", 404);
-                // Si no hay productos, devolver un mensaje con un código 404 (no encontrado)
-        } catch (Exception $e) {
-            // En caso de error del servidor, devolver un mensaje con un código 500 (error del servidor)
-            $this->view->response("Error de servidor", 500);
-        }
-    }
-```
-
-### CÓDIGO GUARDADO COMO IMAGEN
-#### REALIZAR CAPTURA -> GUARDARLA EN CARPETA CORRESPONDIETE
-![Imágen del código de la función getProducts](img/img-products/getProducts.PNG)
-
-### Retorno
-La función no retorna ningún valor directamente. En su lugar, envía una respuesta al cliente utilizando el objeto `view`. Los posibles códigos de estado de respuesta son:
-
-- **200 OK:** Si se obtuvieron productos correctamente.
-- **404 Not Found:** Si no hay products en la base de datos.
-- **500 Internal Server Error:** Si ocurre un error del servidor al intentar obtener los productos.
-
-## Ejemplos de uso `http://localhost/proyectos/tiendaDeRopaAPI/api/products`
-### Ejemplo 1: Obtención exitosa de products
-
-Si hay productos en la base de datos, la función enviará una respuesta con código 200 y los productos en formato JSON:
-```json
-{
-    "status": 200,
-    "data": [
-        {
-            "id": 1,
-            "nombre": "Tarea 1",
-            "descripcion": "Descripción de la tarea 1"
-        },
-        ...
-    ]
-}
-```
-
-### Ejemplo 2: Productos no encontradas
-
-Si no existen productos en la base de datos, la función enviará una respuesta con código 404 y un mensaje de error:
-```json
-{
-   {
-    "status": 404,
-    "message": "No hay productos en la base de datos"
-   }
-}
-```
-
-### Ejemplo 3: Error de servidor
-
-Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
-
-```json
-{
-    "status": 500,
-    "message": "Error de servidor: [detalles del error]"
-}
-```
-
-### Notas 
-
-- **La inclusión del mensaje de excepción (`$e->getMessage()`) en la respuesta de error del servidor puede ser útil para depuración, pero puede exponer detalles sensibles del servidor. Considera esta práctica con cuidado, especialmente en entornos de producción.** 
-- **Asegúrate de manejar adecuadamente las excepciones y errores en el modelo y la vista para evitar problemas inesperados.** 
-
-
-
-___
-
-
-
-
-## Función `getProduct()`
-
-### Descripción
-La función `getProduct` del controlador obtiene un producto específico de la base de datos y envía una respuesta adecuada al cliente basado en el resultado.
-
-### CÓDIGO ESCRITO A MANO (COPY - PASTE DEL CONTROLADOR)
-
-```php
-   public function getProduct($params = null) {
-        $id = $params[':ID'];
-        
-        try {
-            $id = $this->model->getProduct($id);
-
-            if($id){
-                $response = [
-                "status" => 200,
-                "message" => $id
-               ];
-                $this->view->response($response, 200);
-            }
-            else{ 
-                $response = [
-                    "status" => 404,
-                    "message" => "No existe el producto en la base de datos."
-                ];
-                $this->view->response($response, 404);
-            }
-        } catch (Exception $e) {
-            // En caso de error del servidor, devolver un mensaje con un código 500 (error del servidor)
-            $this->view->response("Error de servidor", 500);
-        }
-
-    }   
-```
-### Parámetros
-**`$params (array)`: Un array asociativo que contiene los parámetros de la solicitud. En este caso, se espera que contenga '`:ID`', el identificador de la tarea que se desea obtener.**
-
-### Retorno
-La función no retorna ningún valor directamente. En su lugar, envía una respuesta al cliente utilizando el objeto `view`. Los posibles códigos de estado de respuesta son:
-
-- **200 OK:** Si se obtuvieron tareas correctamente.
-- **404 Not Found:** Si no hay tareas en la base de datos.
-- **500 Internal Server Error:** Si ocurre un error del servidor al intentar obtener las tareas.
-
-## Ejemplos de uso `http://localhost/proyectos/tiendaDeRopaAPI/api/products/1`
-### Ejemplo 1: Obtención exitosa del producto
-
-Si eñ producto con el ID proporcionado existe, la función enviará una respuesta con código 200 y la tarea en formato JSON:
-```json
-{
-    "status": 200,
-    "data": [
-        {
-            "id": 1,
-            "nombre": "Producto 1",
-            "descripcion": "Descripción del producto"
-        }
-    ]
-}
-```
-
-### Ejemplo 2: Producto no encontradas
-
-Si no existe un producto con el ID proporcionado, la función enviará una respuesta con código 404 y un mensaje de error:
-```json
-{
-   {
-    "status": 404,
-    "message": "No existe el producto con id: 1"
-   }
-}
-```
-
-### Ejemplo 3: Error de servidor
-
-Si ocurre un error del servidor, la función enviará una respuesta con código 500 y un mensaje de error:
-
-```json
-{
-    "status": 500,
-    "message": "Error de servidor: [detalles del error]"
-}
-```
-
-
-
-

@@ -12,8 +12,8 @@ class storesApiController extends controller{
 
     public function showingStores() {
         try {
-            if(!empty($_GET['atributo'])){
-                $stores = $this->model->getAll($_GET['atributo'], $_GET['order']);
+            if(!empty($_GET['attribute'])){
+                $stores = $this->model->getAll($_GET['attribute'], $_GET['order']);
             }else{
                 $stores = $this->model->getAll();
             }
@@ -59,13 +59,13 @@ class storesApiController extends controller{
     public function newStore() {
         try {
             $store = $this->getData();
+            if (!isset($store->nombre) || !isset($store->direccion) || !isset($store->telefono) || !isset($store->email)) {
+                $this->view->response("Complete los datos", 400);
+            }else{
             $nombre=$store->nombre;
             $direccion=$store->direccion;
             $telefono=$store->telefono;
             $email=$store->email;
-            if (empty($nombre) || empty($direccion) || empty($telefono) || empty($email)) {
-                $this->view->response("Complete los datos", 400);
-            }else{
                 $lastId=$this->model->insertStore($nombre, $direccion, $telefono, $email);
                 $store=$this->model->getStore($lastId);
                 $response = [
@@ -117,4 +117,3 @@ class storesApiController extends controller{
     }    
 
 }
-
